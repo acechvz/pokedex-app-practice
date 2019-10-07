@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Text } from 'react-native';
+import React from 'react';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo-hooks';
 import styled from 'styled-components/native';
 import PokeList from './components/PokeList/PokeList';
-import axios from 'axios';
-import { BASE_URL } from './constants';
+// import { BASE_URL } from './constants';
+
+const client = new ApolloClient({
+  uri: 'https://graphql-pokemon.now.sh'
+});
 
 const PokeWrapper = styled.View`
   flex: 1;
@@ -11,34 +15,18 @@ const PokeWrapper = styled.View`
 `;
 
 const Heading = styled.Text`
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
 `
 
 function App() {
-  const [pokemons, setPokemons] = useState([]);
-
-  const fetchPokemons = async () => {
-    let $pokemons = [];
-    for (let id = 1; id <= 10; id++) {
-      const response = await axios.get(`${BASE_URL}pokemon/${id}`);
-      const pokemon = await response.data;
-
-      $pokemons = [ ...$pokemons, pokemon ];
-    }
-
-    setPokemons( $pokemons );
-  }
-
-  useEffect( () => {
-    fetchPokemons();
-  }, []);
-
   return (
-    <PokeWrapper>
-      <Heading>PokeAPI HOME!</Heading>      
-      <PokeList pokemons={ pokemons } />
-    </PokeWrapper>
+    <ApolloProvider client={client}>
+      <PokeWrapper>
+        <Heading>Pokedex</Heading>      
+        <PokeList />
+      </PokeWrapper>
+    </ApolloProvider>
   );
 }
 

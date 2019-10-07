@@ -1,23 +1,48 @@
 import React from 'react';
-import { Text, SafeAreaView, FlatList } from 'react-native';
+import { gql } from 'apollo-boost';
+import { useQuery } from 'react-apollo-hooks';
+import { Text, FlatList } from 'react-native';
 import styled from 'styled-components/native';
 import PokeCard from './PokeCard';
+
+const GET_12_POKEMONS = gql`
+  {
+    pokemons(first:12) {
+      id
+      name
+      image
+      types
+    }
+  }
+`
 
 const PokeItems = styled.SafeAreaView`
     flex: 1;
     padding: 15px 0;
 `
 
-function PokeList({ pokemons }) {
+const List = () => {
+    const { data, error, loading } = useQuery(GET_12_POKEMONS);
+
+    if(error) return <Text>Error!</Text>
+    if(loading) return <Text>Loading</Text>
+
+    return (
+        <FlatList
+            showsVerticalScrollIndicator={false}
+            data={ data.pokemons }
+            keyExtractor={ (item, idx) => idx.toString()  }
+            renderItem={ ({item}) => <PokeCard pokemon={ item } /> }
+            numColumns={2}
+            />
+    )
+}
+
+function PokeList() {
+
     return (
         <PokeItems>
-            <FlatList
-                scrollIndicatorInsets={ false }
-                data={ pokemons }
-                keyExtractor={ (item, idx) => idx.toString()  }
-                renderItem={ ({item}) => <PokeCard pokemon={ item } /> }
-                numColumns={2}
-             />
+            <List />
         </PokeItems>
     )
 }
