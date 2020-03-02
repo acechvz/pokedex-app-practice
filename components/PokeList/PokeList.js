@@ -1,13 +1,13 @@
 import React from 'react';
 import { gql } from 'apollo-boost';
 import { useQuery } from 'react-apollo-hooks';
-import { Text, FlatList } from 'react-native';
+import { Text, FlatList, ActivityIndicator } from 'react-native';
 import styled from 'styled-components/native';
 import PokeCard from './PokeCard';
 
-const GET_12_POKEMONS = gql`
+const GET_26_POKEMONS = gql`
   {
-    pokemons(first:12) {
+    pokemons(first:26) {
       id
       name
       image
@@ -16,16 +16,16 @@ const GET_12_POKEMONS = gql`
   }
 `
 
-const PokeItems = styled.SafeAreaView`
+const PokeItems = styled.View`
     flex: 1;
-    padding: 15px 0;
+    padding: 15px 0 0 0;
 `
 
 const List = () => {
-    const { data, error, loading } = useQuery(GET_12_POKEMONS);
+    const { data, error, loading } = useQuery(GET_26_POKEMONS);
 
     if(error) return <Text>Error!</Text>
-    if(loading) return <Text>Loading</Text>
+    if(loading) return <ActivityIndicator size="large" />
 
     return (
         <FlatList

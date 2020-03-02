@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, ActivityIndicator } from 'react-native';
+import { Image, ActivityIndicator, View, Text } from 'react-native';
 import styled from 'styled-components/native';
 
 const typeStyles = {
@@ -32,22 +32,42 @@ const PokeItem = styled.View`
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
-    overflow: visible;
+    overflow: hidden;
     position: relative;
     height: 110px;
 `
 
-const PokeInfo = styled.Text`
+const PokeInfo = styled.View`
     width: 60%;
     font-weight: 500;
     text-transform: capitalize;
-    font-size: 14px;
+    font-size: 12px;
     color: #666;
 `
 
 const PokeThumb = styled.Image`
    max-width: 40%;
    max-height: 75%;
+   align-self: center;
+`
+
+const Pill = styled.Text`
+   background-color: #a8a878;
+   padding: 3px 5px;
+   font-size: 10px;
+   color: white;
+   border-radius: 10px;
+   margin-bottom: 3px;
+   text-align: center;
+`
+
+const Pokeball = styled.Image`
+   position: absolute;
+   bottom: -20px;
+   right: -20px;
+   width: 60%;
+   height: 60%;
+   opacity: .1;
 `
 
 const getTypeStyle = ({types}) => {
@@ -59,6 +79,14 @@ const getTypeStyle = ({types}) => {
     });
 
     return $type;
+}
+
+const PokePills = (items) => {
+    return (
+       <View style={{ padding: 5, paddingLeft: 0, flex: 1, alignContent: 'flex-start' }}>
+         {items.types.map( type => <Pill style={{ backgroundColor: typeStyles[type.toLowerCase()] }} key={ Math.random() }>{ type }</Pill>)}
+       </View>
+    );
 }
 
 const PokeImage = ( {image} ) => {
@@ -106,9 +134,11 @@ function PokeCard({ pokemon }) {
             borderWidth: 1
         }}>
             <PokeInfo>
-                { pokemon.name }
+                <Text style={{ color: '#3b3b3b' }}>{ pokemon.name }</Text>
+                <PokePills types={ pokemon.types } />
             </PokeInfo>
             <PokeImage image={ pokemon.image } />
+            <Pokeball source={ require('../../assets/pokeball-icon.png') } style={{resizeMode: 'contain'}} />
         </PokeItem>
     );
 }
